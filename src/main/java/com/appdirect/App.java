@@ -11,16 +11,13 @@ import org.apache.commons.cli.ParseException;
  */
 public class App {
 	public static void main(String[] args) throws ParseException {
-
 		Options options = new Options();
-		options.addOption("helloworld", false, "prints hello world");
+		SendCommand sendCommand = new SendCommand();
+		sendCommand.registerOption(options);
 
 		CommandLineParser parser = new DefaultParser();
-
 		CommandLine cmd = parser.parse(options, args);
 
-		if (cmd.hasOption("helloworld")) {
-			System.out.println("Hello World!");
-		}
+		sendCommand.execute(cmd);
 	}
 }
