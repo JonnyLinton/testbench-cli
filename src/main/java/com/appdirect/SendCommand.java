@@ -18,9 +18,11 @@ public class SendCommand {
 		options.addOption(COMMAND_NAME, true, "sends an event of type <type>. Supported type is ORDER.");
 	}
 
-	public void execute(CommandLine cmd) throws IOException {
+	public void execute(CommandLine cmd) throws IOException, InterruptedException {
 		if (cmd.hasOption(COMMAND_NAME)) {
-			System.out.println(httpClient.getURL("https://www.appdirect.com"));
+			Thread.sleep(6000);
+			HttpResponse response = httpClient.getURL("http://localhost:8888/subscription/order");
+			System.out.println("Response: " + response.responseCode + " Body: \n" + response.body);
 		}
 	}
 }

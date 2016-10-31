@@ -7,13 +7,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HttpClient {
-	public String getURL(String url) throws IOException {
+	public HttpResponse getURL(String url) throws IOException {
 		URL urlObject = new URL(url);
 		HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();
 		connection.setRequestMethod("GET");
 		connection.connect();
+		return new HttpResponse(connection.getResponseCode(), getBody(connection));
+	}
 
-		InputStream stream = connection.getInputStream();
+	private String getBody(HttpURLConnection connection) throws IOException {
+		boolean isSuccess = connection.getResponseCode() >= 200 && connection.getResponseCode() < 300;
+		InputStream stream = isSuccess ? connection.getInputStream() : connection.getErrorStream();
 		return convertStreamToString(stream);
 	}
 

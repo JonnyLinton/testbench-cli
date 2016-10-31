@@ -9,7 +9,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 public class App {
-	public static void main(String[] args) throws ParseException, IOException {
+	public static void main(String[] args) throws ParseException, IOException, InterruptedException {
 		Options options = new Options();
 		SendCommand sendCommand = new SendCommand(new HttpClient());
 		sendCommand.registerOption(options);
