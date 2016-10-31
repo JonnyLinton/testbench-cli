@@ -6,4 +6,4 @@ TestBench used for System Integrators (SI)
 * Docker
 
 ## How to Run:
-`mvn package && ./tb-dev.sh -helloworld`
+`mvn package && ./tb-dev.sh -send order`

@@ -1,18 +1,17 @@
 package com.appdirect;
 
+import java.io.IOException;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-/**
- * Hello world!
- */
 public class App {
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) throws ParseException, IOException {
 		Options options = new Options();
-		SendCommand sendCommand = new SendCommand();
+		SendCommand sendCommand = new SendCommand(new HttpClient());
 		sendCommand.registerOption(options);
 
 		CommandLineParser parser = new DefaultParser();
