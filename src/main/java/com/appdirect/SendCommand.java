@@ -20,7 +20,6 @@ public class SendCommand {
 
 	public void execute(CommandLine cmd) throws IOException, InterruptedException {
 		if (cmd.hasOption(COMMAND_NAME)) {
-			Thread.sleep(6000);
 			HttpResponse response = httpClient.getURL("http://localhost:8888/subscription/order");
 			System.out.println("Response: " + response.responseCode + " Body: \n" + response.body);
 		}

@@ -1,18 +1,23 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-function stopAppmarket {
-    docker stop appdirect-testbench-sample-marketplace > /dev/null
-    docker rm appdirect-testbench-sample-marketplace > /dev/null
-}
-
-trap "stopAppmarket && echo 'error: Script failed: see failed command above'" ERR
-
+sampleMarketplaceVersion=1.0
 version=1.0-SNAPSHOT
 
-# download & run the sample marketplace
-docker run --name appdirect-testbench-sample-marketplace -p 8888:8888 -d docker.appdirectondemand.com/sample-marketplace/sample-marketplace:1.0-SNAPSHOT > /dev/null
+# TODO: downloadIfNeeded() -- checks if mockmarketplace file exists, if not - download jar
+# TODO: add sampleMarketplaceVersion variable to URL
+# make a folder, then download the jar
+mkdir -p ~/appdirect-testbench
+curl -o ~/appdirect-testbench/samplemarketplace 'https://artifactory.appdirectondemand.com/artifactory/libs-release-local/com/appdirect/sample-marketplace/1.0/sample-marketplace-1.0.jar'
 
+# TODO: "trap" - check if PID isset - if it is -> err (for the case where the marketplace process was not killed)
+# trap "stopAppmarket && echo 'error: Script failed: see failed command above'" ERR
+# Start the Sample Marketplace
+java -jar ~/appdirect-testbench/samplemarketplace & PID=$!
+./wait-for-it.sh localhost:8888 -t 0 --strict -- echo "Mock Marketplace is up with processId = $PID"
+
+# Start the testbench
 java -jar target/testbench-cli-${version}.jar "$@"
 
-stopAppmarket
+# Stop the sample marketplace jar (process id)
+kill $PID
