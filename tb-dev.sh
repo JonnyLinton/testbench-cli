@@ -4,16 +4,26 @@ set -euo pipefail
 sampleMarketplaceVersion=1.0
 version=1.0-SNAPSHOT
 
-# TODO: downloadIfNeeded() -- checks if mockmarketplace file exists, if not - download jar
-# TODO: add sampleMarketplaceVersion variable to URL
-# make a folder, then download the jar
-mkdir -p ~/appdirect-testbench
-curl -o ~/appdirect-testbench/samplemarketplace 'https://artifactory.appdirectondemand.com/artifactory/libs-release-local/com/appdirect/sample-marketplace/1.0/sample-marketplace-1.0.jar'
+function downloadSampleMarketplaceIfNeeded() {
+	if [ ! -e ~/appdirect-testbench/samplemarketplace${sampleMarketplaceVersion} ]; then
+    	mkdir -p ~/appdirect-testbench && curl -o ~/appdirect-testbench/samplemarketplace${sampleMarketplaceVersion} "https://artifactory.appdirectondemand.com/artifactory/libs-release-local/com/appdirect/sample-marketplace/${sampleMarketplaceVersion}/sample-marketplace-${sampleMarketplaceVersion}.jar";
+    fi
+}
 
-# TODO: "trap" - check if PID isset - if it is -> err (for the case where the marketplace process was not killed)
-# trap "stopAppmarket && echo 'error: Script failed: see failed command above'" ERR
+function stopSampleMarketplaceIfRunning() {
+	# pid="$(lsof -Pi :8888 -sTCP:LISTEN -t)"
+	if lsof -Pi :8888 -sTCP:LISTEN -t >/dev/null; then
+        # Sample Marketplace is still running - must kill it now.
+        echo 'Some Error Occurred! Attempting to stop the Sample Marketplace, with PID = ${pid}' & kill $(lsof -Pi :8888 -sTCP:LISTEN -t)
+    fi
+}
+
+trap "stopSampleMarketplaceIfRunning && echo 'error: Script failed: see failed command above'" ERR
+
+downloadSampleMarketplaceIfNeeded
+
 # Start the Sample Marketplace
-java -jar ~/appdirect-testbench/samplemarketplace & PID=$!
+java -jar ~/appdirect-testbench/samplemarketplace${sampleMarketplaceVersion} & PID=$!
 ./wait-for-it.sh localhost:8888 -t 0 --strict -- echo "Mock Marketplace is up with processId = $PID"
 
 # Start the testbench
