@@ -8,15 +8,28 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import com.appdirect.commands.CancelCommand;
+import com.appdirect.commands.OrderCommand;
+
 public class App {
 	public static void main(String[] args) throws ParseException, IOException, InterruptedException {
 		Options options = new Options();
-		SendCommand sendCommand = new SendCommand(new HttpClient());
-		sendCommand.registerOption(options);
+		HttpClient httpClient = new HttpClient();
+
+		OrderCommand orderCommand = new OrderCommand(httpClient);
+		orderCommand.registerOption(options);
+
+		CancelCommand cancelCommand = new CancelCommand(httpClient);
+		cancelCommand.registerOption(options);
 
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = parser.parse(options, args);
 
-		sendCommand.execute(cmd);
+		if (cmd.hasOption(OrderCommand.ORDER)) {
+			orderCommand.execute(cmd);
+		}
+		else if (cmd.hasOption(CancelCommand.CANCEL)) {
+			cancelCommand.execute(cmd);
+		}
 	}
 }

@@ -1,25 +1,29 @@
-package com.appdirect;
+package com.appdirect.commands;
 
 import java.io.IOException;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 
-public class SendCommand {
-	private static final String COMMAND_NAME = "send";
+import com.appdirect.HttpClient;
+import com.appdirect.HttpResponse;
+
+public class OrderCommand implements Command{
+	public static final String ORDER = "order";
 
 	private HttpClient httpClient;
 
-	public SendCommand(HttpClient httpClient) {
+	public OrderCommand(HttpClient httpClient) {
 		this.httpClient = httpClient;
 	}
 
 	public void registerOption(Options options) {
-		options.addOption(COMMAND_NAME, true, "sends an event of type <type>. Supported type is ORDER.");
+		options.addOption(ORDER, true, "Sends an event of type ORDER.");
 	}
 
 	public void execute(CommandLine cmd) throws IOException, InterruptedException {
-		if (cmd.hasOption(COMMAND_NAME)) {
+		if (cmd.hasOption(ORDER)) {
+//			String accountID = cmd.getOptionValue(ORDER);
 			HttpResponse response = httpClient.getURL("http://localhost:8888/subscription/order");
 			System.out.println("Response: " + response.responseCode + " Body: \n" + response.body);
 		}
