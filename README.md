@@ -8,4 +8,7 @@ TestBench used for System Integrators (SI)
 ## How to Run:
 `mvn package`
 THEN:
-`./tb-dev.sh -order .` or `./tb-dev.sh -cancel <accountId>`
+`./tb-dev.sh` AND:
+	* `-send .` Sends an subscription ORDER event
+	* `-cancel <accountIdentifier>` Sends a CANCEL event for a chatroom subsciption
+	* `-oco .` "ORDER-CANCEL-ORDER" Sends all three in sequence, all for the same account

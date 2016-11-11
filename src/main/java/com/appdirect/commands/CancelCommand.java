@@ -25,8 +25,8 @@ public class CancelCommand implements Command{
 	public void execute(CommandLine cmd) throws IOException, InterruptedException {
 		if (cmd.hasOption(CANCEL)) {
 			String accountId = cmd.getOptionValue(CANCEL); // TODO: checks?
-			HttpResponse response = httpClient.getURL("http://localhost:8888/subscription/cancel/" +accountId); //TODO: correct endpoint
-			System.out.println("Response: " + response.responseCode + " Body: \n" + response.body);
+			HttpResponse response = httpClient.getURL("http://localhost:8888/subscription/cancel/" +accountId);
+			response.isResponseSuccessful(CANCEL);
 		}
 	}
 }

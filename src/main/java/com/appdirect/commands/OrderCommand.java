@@ -25,7 +25,7 @@ public class OrderCommand implements Command{
 		if (cmd.hasOption(ORDER)) {
 //			String accountID = cmd.getOptionValue(ORDER);
 			HttpResponse response = httpClient.getURL("http://localhost:8888/subscription/order");
-			System.out.println("Response: " + response.responseCode + " Body: \n" + response.body);
+			response.isResponseSuccessful(ORDER);
 		}
 	}
 }

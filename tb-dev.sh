@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-sampleMarketplaceVersion=1.0
+sampleMarketplaceVersion=2.0
 version=1.0-SNAPSHOT
 
+# TODO: have a consistent URL for the jar file! (updates with version changes)
 function downloadSampleMarketplaceIfNeeded() {
 	if [ ! -e ~/appdirect-testbench/samplemarketplace${sampleMarketplaceVersion} ]; then
-    	mkdir -p ~/appdirect-testbench && curl -o ~/appdirect-testbench/samplemarketplace${sampleMarketplaceVersion} "https://artifactory.appdirectondemand.com/artifactory/libs-release-local/com/appdirect/sample-marketplace/${sampleMarketplaceVersion}/sample-marketplace-${sampleMarketplaceVersion}.jar";
+    	mkdir -p ~/appdirect-testbench && curl -o ~/appdirect-testbench/samplemarketplace${sampleMarketplaceVersion} file:///Users/jonathan.linton/sample-marketplace/target/sample-marketplace-2.0-SNAPSHOT.jar;
     fi
 }
 
 function stopSampleMarketplaceIfRunning() {
-	# pid="$(lsof -Pi :8888 -sTCP:LISTEN -t)"
+	pid=$(lsof -Pi :8888 -sTCP:LISTEN -t)
 	if lsof -Pi :8888 -sTCP:LISTEN -t >/dev/null; then
         # Sample Marketplace is still running - must kill it now.
-        echo 'Some Error Occurred! Attempting to stop the Sample Marketplace, with PID = ${pid}' & kill $(lsof -Pi :8888 -sTCP:LISTEN -t)
+        echo "Some Error Occurred! Attempting to stop the Sample Marketplace, with PID = ${pid}" & kill $(lsof -Pi :8888 -sTCP:LISTEN -t)
     fi
 }
 
