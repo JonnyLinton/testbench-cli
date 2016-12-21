@@ -8,6 +8,6 @@ TestBench used for System Integrators (SI)
 `mvn package`
 THEN:
 `./tb-dev.sh` AND: <br/>
-* `-send .` Sends an subscription ORDER event <br/>
+* `-order .` Sends an subscription ORDER event <br/>
 * `-cancel <accountIdentifier>` Sends a CANCEL event for a chatroom subsciption <br/>
 * `-oco .` "ORDER-CANCEL-ORDER" Sends all three in sequence, all for the same account
